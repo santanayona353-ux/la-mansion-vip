@@ -1,0 +1,125 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LA MANSIÓN VIP</title>
+<style>
+body {
+  margin: 0;
+  background: #090909;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+header {
+  padding: 30px 10px;
+  background: #17130b;
+  border-bottom: 2px solid #d6b45c;
+}
+h1 { color: #e4c875; letter-spacing: 3px; }
+h2 { color: #e4c875; }
+main { padding: 18px; max-width: 600px; margin: auto; }
+.card {
+  background: #191919;
+  border: 1px solid #c5a34d;
+  border-radius: 12px;
+  padding: 15px;
+  margin: 12px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.photo {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #302719;
+  color: #e4c875;
+  display: grid;
+  place-items: center;
+}
+button {
+  background: #d6b45c;
+  border: 0;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.controls { display:flex; align-items:center; gap:10px; }
+.controls button { padding: 8px 13px; }
+#remaining { color: #e4c875; font-size: 25px; }
+.action { width:100%; margin-top:14px; }
+</style>
+</head>
+<body>
+<header>
+  <div style="font-size:35px">♛</div>
+  <h1>LA MANSIÓN VIP</h1>
+  <p>VOTACIONES OFICIALES</p>
+</header>
+<main>
+  <h2>¡VOTA POR TUS FAVORITOS!</h2>
+  <p>Votos disponibles:</p>
+  <div id="remaining">10</div>
+  <div id="nominees"></div>
+  <button class="action" onclick="advertisement()">
+    ▶ VER ANUNCIO · +10 VOTOS
+  </button>
+  <button class="action" onclick="sendVotes()">
+    ENVIAR VOTOS
+  </button>
+  <p id="message"></p>
+  <p style="color:#aaa;font-size:12px">
+    Los resultados son privados.
+  </p>
+</main>
+<script>
+let votes = [0,0,0,0,0,0];
+let limit = 10;
+const names = [
+"NOMINADO 1","NOMINADO 2","NOMINADO 3",
+"NOMINADO 4","NOMINADO 5","NOMINADO 6"
+];
+
+function draw() {
+  let html = "";
+  names.forEach((name,i) => {
+    html += `
+    <div class="card">
+      <div class="photo">♛</div>
+      <b>${name}</b>
+      <div class="controls">
+        <button onclick="change(${i},-1)">−</button>
+        <b>${votes[i]}</b>
+        <button onclick="change(${i},1)">+</button>
+      </div>
+    </div>`;
+  });
+  document.getElementById("nominees").innerHTML = html;
+  document.getElementById("remaining").textContent =
+    limit - votes.reduce((a,b)=>a+b,0);
+}
+function change(i,n) {
+  let total = votes.reduce((a,b)=>a+b,0);
+  if(n > 0 && total < limit) votes[i]++;
+  if(n < 0 && votes[i] > 0) votes[i]--;
+  draw();
+}
+function advertisement() {
+  document.getElementById("message").textContent =
+    "Los anuncios recompensados todavía no están conectados.";
+}
+function sendVotes() {
+  let total = votes.reduce((a,b)=>a+b,0);
+  document.getElementById("message").textContent =
+    total > 0
+    ? "¡Tu selección está lista! Falta conectar el servidor para guardar los votos."
+    : "Primero selecciona tus votos.";
+}
+draw();
+</script>
+</body>
+</html>
